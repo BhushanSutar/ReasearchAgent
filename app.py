@@ -7,31 +7,31 @@ from pipeline import extract_urls, invoke_with_retry
 app = Flask(__name__)
 
 
-# ── SSE helpers ───────────────────────────────────────────────────────────────
+# SSE helpers
 
 def sse(event: str, data: dict) -> str:
     """Format a Server-Sent Event string."""
     return f"event: {event}\ndata: {json.dumps(data)}\n\n"
 
 
-# ── Streaming pipeline generator ─────────────────────────────────────────────
+# Streaming pipeline generator 
 
 def run_pipeline_streaming(topic: str):
     try:
-        # ── 1. Search ────────────────────────────────────────────────────────
+        # 1. Search
         yield sse("status", {"step": "search", "message": "🔍 Searching the web..."})
 
         search_content = run_search_agent(topic)
         yield sse("search_done", {"content": search_content})
 
-        # ── 2. Reader ────────────────────────────────────────────────────────
+        #  2. Reader 
         yield sse("status", {"step": "reader", "message": "📄 Scraping sources..."})
 
         urls = extract_urls(search_content)
         scraped_content = run_reader_agent(urls)
         yield sse("reader_done", {"content": scraped_content})
 
-        # ── 3. Writer ────────────────────────────────────────────────────────
+        # 3. Writer
         yield sse("status", {"step": "writer", "message": "✍️ Writing research report..."})
 
         research_combined = (
@@ -45,21 +45,21 @@ def run_pipeline_streaming(topic: str):
         report = clean_output(raw_report)
         yield sse("report_done", {"content": report})
 
-        # ── 4. Critic ────────────────────────────────────────────────────────
+        # 4. Critic
         yield sse("status", {"step": "critic", "message": "🧐 Running editorial review..."})
 
         raw_critique = invoke_with_retry(critic_chain, {"report": report})
         critique = clean_output(raw_critique)
         yield sse("critique_done", {"content": critique})
 
-        # ── Done ─────────────────────────────────────────────────────────────
+        #  Done
         yield sse("done", {"message": "Pipeline complete."})
 
     except Exception as e:
         yield sse("error", {"message": str(e)})
 
 
-# ── Routes ────────────────────────────────────────────────────────────────────
+#  Routes 
 
 @app.route("/")
 def index():
@@ -86,7 +86,7 @@ def run():
     )
 
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+#Entry point
 
 
 
