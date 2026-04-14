@@ -4,7 +4,7 @@ from rich import print
 from agents import run_search_agent, run_reader_agent, writer_chain, critic_chain, clean_output
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# Helpers
 
 def extract_urls(text: str) -> list[str]:
     """Extract valid, scrapeable HTTP/HTTPS URLs from text."""
@@ -39,24 +39,24 @@ def invoke_with_retry(fn, inputs: dict, retries: int = 3, delay: int = 45):
     raise RuntimeError("Max retries exceeded due to rate limiting.")
 
 
-# ── Pipeline ──────────────────────────────────────────────────────────────────
+# Pipeline
 
 def run_research_pipeline(topic: str) -> dict:
     state = {}
 
-    # ── 1. Search ────────────────────────────────────────────────────────────
+    # 1. Search
     print(f"\n[bold green]► Stage 1: Search Agent[/bold green]")
     state["search_result"] = run_search_agent(topic)
     print(state["search_result"])
 
-    # ── 2. Reader ────────────────────────────────────────────────────────────
+    # 2. Reader
     print(f"\n[bold green]► Stage 2: Reader Agent[/bold green]")
     urls = extract_urls(state["search_result"])
     print(f"  Scraping {min(len(urls), 3)} URLs: {urls[:3]}")
     state["scraped_result"] = run_reader_agent(urls)
     print(state["scraped_result"][:800] + "..." if len(state["scraped_result"]) > 800 else state["scraped_result"])
 
-    # ── 3. Writer ────────────────────────────────────────────────────────────
+    # 3. Writer
     print(f"\n[bold green]► Stage 3: Writer Chain[/bold green]")
     research_combined = (
         f"## Search Results\n\n{state['search_result']}\n\n"
@@ -69,7 +69,7 @@ def run_research_pipeline(topic: str) -> dict:
     state["report"] = clean_output(raw_report)
     print(state["report"])
 
-    # ── 4. Critic ────────────────────────────────────────────────────────────
+    # 4. Critic 
     print(f"\n[bold green]► Stage 4: Critic Chain[/bold green]")
     raw_critique = invoke_with_retry(critic_chain, {"report": state["report"]})
     state["critique"] = clean_output(raw_critique)
