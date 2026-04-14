@@ -60,6 +60,39 @@ Frontend (Streaming UI via SSE)
 
 ### 1. Clone Repository
 
-```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/your-username/your-repo-name.git  
+cd your-repo-name  
+
+---
+
+### 2. Create Virtual Environment + Install + Run
+
+# Create virtual environment  
+python -m venv venv  
+
+# Activate (Windows)  
+venv\Scripts\activate  
+
+# Activate (Mac/Linux)  
+source venv/bin/activate  
+
+# Install dependencies  
+pip install -r requirements.txt  
+
+# Run the application  
+python app.py  
+
+---
+
+### 3. Setup Environment Variables
+
+Create a `.env` file:
+
+TAVILY_API_KEY=your_key  
+MISTRAL_API_KEY=your_key  
+
+---
+
+### 4. Open in Browser
+
+http://127.0.0.1:5000  
