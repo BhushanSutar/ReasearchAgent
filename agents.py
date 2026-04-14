@@ -7,12 +7,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── LLM ──────────────────────────────────────────────────────────────────────
+#LLM
 
 llm = ChatMistralAI(model="mistral-large-latest", temperature=0.2)
 
 
-# ── Output cleaner ────────────────────────────────────────────────────────────
+# Output cleaner 
 
 # Patterns that signal unwanted conversational filler
 _FILLER_PATTERNS = re.compile(
@@ -33,7 +33,7 @@ def clean_output(text: str) -> str:
     return " ".join(cleaned).strip()
 
 
-# ── Search Agent (direct tool call) ──────────────────────────────────────────
+#  Search Agent 
 
 def run_search_agent(topic: str) -> str:
     """
@@ -43,7 +43,7 @@ def run_search_agent(topic: str) -> str:
     return web_search.invoke(topic)
 
 
-# ── Reader Agent (direct tool calls) ─────────────────────────────────────────
+# Reader Agent (direct tool calls)
 
 def run_reader_agent(urls: list[str]) -> str:
     """
@@ -61,7 +61,7 @@ def run_reader_agent(urls: list[str]) -> str:
     return "\n\n---\n\n".join(sections)
 
 
-# ── Writer Chain ──────────────────────────────────────────────────────────────
+# Writer Chain
 
 _WRITER_SYSTEM = """\
 You are a professional research analyst writing structured research reports.
@@ -125,7 +125,7 @@ writer_prompt = ChatPromptTemplate.from_messages([
 writer_chain = writer_prompt | llm | StrOutputParser()
 
 
-# ── Critic Chain ──────────────────────────────────────────────────────────────
+# Critic Chain
 
 _CRITIC_SYSTEM = """\
 You are a senior editorial critic evaluating research reports.
