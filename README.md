@@ -67,19 +67,19 @@ cd your-repo-name
 
 ### 2. Create Virtual Environment + Install + Run
 
-# Create virtual environment  
+### Create virtual environment  
 python -m venv venv  
 
-# Activate (Windows)  
+### Activate (Windows)  
 venv\Scripts\activate  
 
-# Activate (Mac/Linux)  
+### Activate (Mac/Linux)  
 source venv/bin/activate  
 
-# Install dependencies  
+### Install dependencies  
 pip install -r requirements.txt  
 
-# Run the application  
+### Run the application  
 python app.py  
 
 ---
